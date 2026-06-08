@@ -56,3 +56,4 @@ Preserve this format when displaying results:
 | OpenAI | 🔳 OpenAI |
 | Grok | 🟥 Grok |
 | Perplexity | 🟩 Perplexity |
+| Antigravity | 🟪 Antigravity |

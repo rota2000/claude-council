@@ -69,6 +69,7 @@ Provider emojis (ALWAYS use emoji + space):
 - 🔳 OpenAI
 - 🟥 Grok
 - 🟩 Perplexity
+- 🟪 Antigravity
 
 ## Step 5: Enhanced Synthesis
 

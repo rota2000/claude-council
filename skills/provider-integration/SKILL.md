@@ -28,6 +28,19 @@ Each provider is a shell script in `scripts/providers/` that:
 | Grok | `XAI_API_KEY` (or `GROK_API_KEY`) | grok-4.20-reasoning |
 | Perplexity | `PERPLEXITY_API_KEY` | sonar-reasoning-pro |
 
+## CLI Providers (subscription auth, no API key)
+
+Some providers are CLI binaries rather than API endpoints — gated on the binary
+being on `PATH`, not an API key. Add one by creating `scripts/providers/{name}.sh`
+that shells out to the CLI in headless mode, then adding a `command -v {bin}`
+case to `discover_providers` in `lib/providers.sh`. Existing examples:
+
+| Provider | Binary | Notes |
+|----------|--------|-------|
+| Codex | `codex` | shadows the `openai` API provider |
+| Gemini CLI | `gemini` | shadows the `gemini` API provider |
+| Antigravity | `agy` | standalone multi-model agent, no API sibling, no model override |
+
 ## Troubleshooting
 
 - **Not discovered**: Check API key is set and script is executable

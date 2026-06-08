@@ -4,7 +4,7 @@
 
 # Discover which provider scripts are available to query.
 # API providers are gated on their <NAME>_API_KEY env var; subscription-auth
-# CLI providers (codex, gemini-cli) are gated on their binary being on PATH.
+# CLI providers (codex, gemini-cli, agy) are gated on their binary being on PATH.
 discover_providers() {
     local available=()
 
@@ -20,6 +20,9 @@ discover_providers() {
                 ;;
             gemini-cli)
                 command -v gemini >/dev/null 2>&1 && is_available=true
+                ;;
+            agy)
+                command -v agy >/dev/null 2>&1 && is_available=true
                 ;;
             gemini)     [[ -n "${GEMINI_API_KEY:-}" ]] && is_available=true ;;
             openai)     [[ -n "${OPENAI_API_KEY:-}" ]] && is_available=true ;;
@@ -91,6 +94,9 @@ get_model() {
         perplexity) echo "${PERPLEXITY_MODEL:-sonar-reasoning-pro}" ;;
         codex)      echo "${CODEX_MODEL:-gpt-5.5}" ;;
         gemini-cli) echo "${GEMINI_CLI_MODEL:-gemini-3-flash-preview}" ;;
+        # agy never gets -m (see agy.sh): Antigravity is a multi-model agent that
+        # uses its own configured default, so the cache key / header just reads "default".
+        agy)        echo "default" ;;
         *)          echo "unknown" ;;
     esac
 }
@@ -115,6 +121,7 @@ provider_emoji() {
         openai|codex)      echo "🔳" ;;
         grok)              echo "🟥" ;;
         perplexity)        echo "🟩" ;;
+        agy)               echo "🟪" ;;
         *)                 echo "⬛" ;;
     esac
 }

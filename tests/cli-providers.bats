@@ -46,6 +46,13 @@ source_lib_and_call() {
     [[ "$output" == *"gemini-cli"* ]]
 }
 
+@test "discover_providers: includes agy when binary is on PATH" {
+    if ! command_exists agy; then skip "agy CLI not installed"; fi
+    run source_lib_and_call 'discover_providers'
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"agy"* ]]
+}
+
 @test "discover_providers: excludes codex when binary is missing" {
     # Strip codex from PATH by running with a minimal PATH
     run bash -c "
@@ -138,6 +145,17 @@ source_lib_and_call() {
     [[ "$output" =~ perplexity[[:space:]]+codex[[:space:]]+grok ]]
 }
 
+@test "prefer_cli_over_api: keeps agy and does not shadow any API provider" {
+    # agy is Antigravity, a standalone multi-model agent with no API sibling.
+    # Unlike codex/gemini-cli it must never drop a co-present API provider.
+    run source_lib_and_call 'prefer_cli_over_api agy gemini openai perplexity'
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"agy"* ]]
+    [[ "$output" == *"gemini"* ]]
+    [[ "$output" == *"openai"* ]]
+    [[ "$output" == *"perplexity"* ]]
+}
+
 # ============================================================================
 # query-council.sh integration
 # ============================================================================
@@ -209,6 +227,14 @@ source_lib_and_call() {
     [[ "${COUNCIL_E2E:-}" == "1" ]] || skip "set COUNCIL_E2E=1 to run real CLI calls"
     if ! command_exists gemini; then skip "gemini CLI not installed"; fi
     run "${PROVIDERS_DIR_REAL}/gemini-cli.sh" "Reply with exactly the word: OK"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"OK"* ]]
+}
+
+@test "agy.sh: returns response for trivial prompt (E2E)" {
+    [[ "${COUNCIL_E2E:-}" == "1" ]] || skip "set COUNCIL_E2E=1 to run real CLI calls"
+    if ! command_exists agy; then skip "agy CLI not installed"; fi
+    run "${PROVIDERS_DIR_REAL}/agy.sh" "Reply with exactly the word: OK"
     [ "$status" -eq 0 ]
     [[ "$output" == *"OK"* ]]
 }

@@ -14,6 +14,7 @@ BLUE='\033[34m'
 WHITE='\033[37m'
 RED='\033[31m'
 GREEN='\033[32m'
+CYAN='\033[36m'
 DIM='\033[2m'
 RESET='\033[0m'
 
@@ -113,6 +114,7 @@ grok_status=$(check_provider "grok" "GROK_API_KEY" "GROK_MODEL" "grok-4.20-reaso
 perplexity_status=$(check_provider "perplexity" "PERPLEXITY_API_KEY" "PERPLEXITY_MODEL" "sonar-reasoning-pro")
 codex_status=$(check_cli_provider "codex" "codex")
 gemini_cli_status=$(check_cli_provider "gemini-cli" "gemini")
+agy_status=$(check_cli_provider "agy" "agy")
 
 # Format output
 format_status() {
@@ -165,17 +167,19 @@ format_status "$(provider_emoji grok)"       "$(provider_color grok)"       "Gro
 format_status "$(provider_emoji perplexity)" "$(provider_color perplexity)" "Perplexity" "$perplexity_status"
 format_status "$(provider_emoji codex)"      "$(provider_color codex)"      "Codex CLI"  "$codex_status"
 format_status "$(provider_emoji gemini-cli)" "$(provider_color gemini-cli)" "Gemini CLI" "$gemini_cli_status"
+format_status "$(provider_emoji agy)"        "$(provider_color agy)"        "Antigravity CLI" "$agy_status"
 
 echo ""
 
 # Summary
 available=0
-[[ "$gemini_status" == ok:* ]] && ((available++))
-[[ "$openai_status" == ok:* ]] && ((available++))
-[[ "$grok_status" == ok:* ]] && ((available++))
-[[ "$perplexity_status" == ok:* ]] && ((available++))
-[[ "$codex_status" == ok:* ]] && ((available++))
-[[ "$gemini_cli_status" == ok:* ]] && ((available++))
+[[ "$gemini_status" == ok:* ]] && ((++available))
+[[ "$openai_status" == ok:* ]] && ((++available))
+[[ "$grok_status" == ok:* ]] && ((++available))
+[[ "$perplexity_status" == ok:* ]] && ((++available))
+[[ "$codex_status" == ok:* ]] && ((++available))
+[[ "$gemini_cli_status" == ok:* ]] && ((++available))
+[[ "$agy_status" == ok:* ]] && ((++available))
 
-echo -e "${DIM}${available}/6 providers available${RESET}"
+echo -e "${DIM}${available}/7 providers available${RESET}"
 echo ""

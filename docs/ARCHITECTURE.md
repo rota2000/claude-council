@@ -30,11 +30,11 @@
         +-------+-------+-------+-------+-------+-------+
         |       |       |       |       |       |       |
         v       v       v       v       v       v       v
-   +--------+ +-----+ +------+ +-----+ +------+ +-----------+
-   | gemini | |open | | grok | |perp | |codex | | gemini-cli|
-   |  .sh   | | .sh | |  .sh | |.sh  | |  .sh | |    .sh    |
-   +--------+ +-----+ +------+ +-----+ +------+ +-----------+
-   (API)      (API)   (API)    (API)   (CLI)    (CLI)
+   +--------+ +-----+ +------+ +-----+ +------+ +-----------+ +-----+
+   | gemini | |open | | grok | |perp | |codex | | gemini-cli| | agy |
+   |  .sh   | | .sh | |  .sh | |.sh  | |  .sh | |    .sh    | | .sh |
+   +--------+ +-----+ +------+ +-----+ +------+ +-----------+ +-----+
+   (API)      (API)   (API)    (API)   (CLI)    (CLI)         (CLI)
         |               |               |               |
         |    +----------+----------+----------+        |
         +--->|      lib/cache.sh   |<---------+--------+
@@ -128,16 +128,19 @@ Two flavors share the interface:
 
 - **API providers** (`gemini`, `openai`, `grok`, `perplexity`) — gated on
   `{PROVIDER}_API_KEY`, talk to vendor APIs over HTTPS, charge per call.
-- **CLI providers** (`codex`, `gemini-cli`) — gated on the binary being on
-  `PATH`, use the user's existing CLI subscription auth, no per-call cost.
-  When both an API and CLI sibling exist (codex+openai, gemini-cli+gemini),
-  the orchestrator prefers the CLI by default; explicit `--providers` wins
-  over the policy.
+- **CLI providers** (`codex`, `gemini-cli`, `agy`) — gated on the binary being
+  on `PATH`, use the user's existing CLI subscription auth, no per-call cost.
+  When an API and CLI sibling exist (codex+openai, gemini-cli+gemini), the
+  orchestrator prefers the CLI by default; explicit `--providers` wins over the
+  policy. `agy` (Google Antigravity) is a standalone multi-model agent with no
+  API sibling, so it never shadows another provider and is always queried when
+  installed — it also takes no model override.
 
 Environment-based configuration:
 - `{PROVIDER}_API_KEY` - Required authentication for API providers
 - `{PROVIDER}_MODEL` - Model override (also applies to CLI providers via
-  `CODEX_MODEL` / `GEMINI_CLI_MODEL`)
+  `CODEX_MODEL` / `GEMINI_CLI_MODEL`; `agy` is the exception — it uses its own
+  configured model and takes no override)
 - `COUNCIL_MAX_TOKENS` - Response length limit (API providers only)
 - `COUNCIL_DEBUG` - Enable verbose logging
 

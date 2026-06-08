@@ -180,7 +180,7 @@ if [[ "$LIST_AVAILABLE" == true ]]; then
     if [[ ${#DISCOVERED[@]} -eq 0 ]]; then
         echo "No providers configured."
         echo "  Set an API key (GEMINI_API_KEY, OPENAI_API_KEY, XAI_API_KEY/GROK_API_KEY, or PERPLEXITY_API_KEY)"
-        echo "  or install a CLI agent (codex, gemini)."
+        echo "  or install a CLI agent (codex, gemini, agy)."
         exit 0
     fi
     read -ra DEFAULT_SET <<< "$(prefer_cli_over_api "${DISCOVERED[@]+"${DISCOVERED[@]}"}")"
@@ -257,7 +257,7 @@ fi
 if [[ ${#PROVIDERS[@]} -eq 0 ]]; then
     echo "Error: No providers configured." >&2
     echo "  Set an API key (GEMINI_API_KEY, OPENAI_API_KEY, XAI_API_KEY/GROK_API_KEY, or PERPLEXITY_API_KEY)" >&2
-    echo "  or install a CLI agent (codex, gemini)." >&2
+    echo "  or install a CLI agent (codex, gemini, agy)." >&2
     exit 1
 fi
 
@@ -404,7 +404,9 @@ fi
 # redirects fail without a controlling tty. Cache the result for the
 # council_signal_* helpers in display.sh.
 COUNCIL_HAS_TTY=0
-: >/dev/tty 2>/dev/null && COUNCIL_HAS_TTY=1
+if [[ -t 1 ]]; then
+    : >/dev/tty 2>/dev/null && COUNCIL_HAS_TTY=1
+fi
 council_signal_state yellow
 COUNCIL_START_MS=$(now_ms)
 

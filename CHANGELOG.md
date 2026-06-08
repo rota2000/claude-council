@@ -4,6 +4,18 @@ All notable changes to claude-council are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to a `YYYY.M.BUILD` versioning scheme where `BUILD` resets each month.
 
+## Unreleased
+
+### Added
+
+- **Antigravity CLI (`agy`) as a provider.** Google Antigravity's `agy` CLI is
+  now a first-class council member, discovered automatically when the binary is
+  on `PATH` (subscription auth, no API key). It runs headless via
+  `agy --print --dangerously-skip-permissions`. Unlike `codex`/`gemini-cli`,
+  `agy` is a standalone multi-model agent with no API sibling, so it never
+  shadows another provider and is always queried when installed. The council
+  passes no model to `agy` — Antigravity uses its own configured default.
+
 ## 2026.6.1
 
 ### Fixes

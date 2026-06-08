@@ -48,7 +48,7 @@ Inside tmux, results stream into a side pane in real time with vendor-colored ba
 
 ## Features
 
-- Query Gemini, OpenAI (GPT/Codex), Grok, and Perplexity simultaneously
+- Query Gemini, OpenAI (GPT/Codex), Grok, Perplexity, and Antigravity simultaneously
 - Use the `codex` and `gemini` CLIs (subscription auth) when installed — preferred over their API siblings
 - Side-by-side comparison of responses with vendor-colored headers
 - Streaming tmux pane that renders responses as they land
@@ -332,18 +332,20 @@ providers:
 
 ### CLI Providers (subscription auth, no API key)
 
-If `codex` or `gemini` CLIs are installed and on `PATH`, they're discovered automatically and **preferred over their API siblings** by default:
+If the `codex`, `gemini`, or `agy` CLIs are installed and on `PATH`, they're discovered automatically:
 
-- `codex` (OpenAI Codex CLI) shadows the `openai` API provider
-- `gemini` (Google Gemini CLI) shadows the `gemini` API provider
+- `codex` (OpenAI Codex CLI) shadows the `openai` API provider — **preferred over it** by default
+- `gemini` (Google Gemini CLI) shadows the `gemini` API provider — **preferred over it** by default
+- `agy` (Google Antigravity CLI) is a standalone multi-model agent with no API sibling, so it's always queried when installed
 
-CLI providers use your existing CLI subscription — no API key, no per-call cost. To opt back into the API variant for a single call, pass it explicitly: `--providers=openai` or `--providers=gemini`. Listing both API and CLI together (e.g., `--providers=gemini,gemini-cli`) runs them side-by-side for comparison.
+CLI providers use your existing CLI subscription — no API key, no per-call cost. To opt back into a shadowed API variant for a single call, pass it explicitly: `--providers=openai` or `--providers=gemini`. Listing both API and CLI together (e.g., `--providers=gemini,gemini-cli`) runs them side-by-side for comparison.
 
 Override CLI model selection (defaults mirror what each CLI picks itself):
 
 ```bash
 export CODEX_MODEL="gpt-5-codex"                # default: gpt-5.5
 export GEMINI_CLI_MODEL="gemini-3-pro"          # default: gemini-3-flash-preview
+# agy takes no model override — Antigravity uses whatever model it is configured with.
 ```
 
 ### Verbosity
