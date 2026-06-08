@@ -27,19 +27,22 @@ FULL_PROMPT="${SYSTEM}
 
 ${PROMPT}"
 
-# agy is an agentic CLI that can run tools and touch the filesystem. We do NOT
-# pass --dangerously-skip-permissions: the council prompt can carry attacker-
-# influenceable content (auto-context injects repo file bodies), and auto-approving
-# every tool request would let an injected instruction execute commands in the
-# user's repo. A read-only advisory query needs no tools, so plain --print is the
-# safe default — any tool attempt is left un-approved rather than auto-run. This is
-# a stronger guard than codex's --skip-git-repo-check / gemini-cli's --skip-trust,
-# which only bypass a launch/trust gate, not per-action approval.
+# agy is an agentic CLI that can run tools and touch the filesystem. We pass
+# --dangerously-skip-permissions so agy can READ repo files referenced by a query
+# without an interactive approval prompt — headless --print has no other way to
+# approve a tool request, so plain --print leaves agy with no filesystem access.
 #
-# We also deliberately do NOT pass -m/--model: Antigravity is a multi-model agent
-# and uses whatever model it is configured with. get_model agy therefore reports
+# SECURITY TRADEOFF (deliberately accepted): --dangerously-skip-permissions auto-
+# approves ALL tool requests — read, WRITE, and terminal/command execution, not just
+# reads (agy exposes no read-only mode). The council prompt can carry attacker-
+# influenceable content (auto-context injects repo file bodies), so an injected
+# instruction could make agy read a secret and echo it into its (cached) response,
+# or run a command / write a file in the repo. Only query agy on trusted content.
+#
+# We deliberately do NOT pass -m/--model: Antigravity is a multi-model agent and
+# uses whatever model it is configured with. get_model agy therefore reports
 # "default" for the cache key / pane header.
-ARGS=(--print "$FULL_PROMPT")
+ARGS=(--print --dangerously-skip-permissions "$FULL_PROMPT")
 
 ERR_TMP=$(mktemp)
 trap 'rm -f "$ERR_TMP"' EXIT
