@@ -1,0 +1,17 @@
+{
+  "name": "claude-council-fork",
+  "owner": {
+    "name": "rota2000",
+    "email": "rota2000.1@gmail.com"
+  },
+  "metadata": {
+    "description": "Personal fork of hex/claude-council with Antigravity (agy) provider support"
+  },
+  "plugins": [
+    {
+      "name": "claude-council",
+      "source": "./",
+      "description": "Consult multiple AI coding agents (Gemini, OpenAI, Grok, Perplexity, plus codex, gemini, and agy (Antigravity) CLIs when installed) to get diverse perspectives on coding problems"
+    }
+  ]
+}
